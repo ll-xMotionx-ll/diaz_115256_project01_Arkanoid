@@ -8,7 +8,7 @@ canvasHeight,canvasWidth=500,500
 win = GraphWin("Arkanoid",canvasWidth,canvasHeight)
 win.setBackground(color_rgb(63, 195, 182))
 win.setCoords(0,0,500,500)
-ballRadius=25
+ballRadius=25.0
 
 
 # Paddle
@@ -42,7 +42,7 @@ def gameplay():
 
     while True:
 
-        # Making ball bounce un the boundaries of the page
+        # Making ball bounce on the boundaries of the page
         if (ball.getCenter().getX()+ballRadius) >= canvasWidth or (ball.getCenter().getX()-ballRadius) <= 0:
             ballXspeed = ballXspeed * -1
         if (ball.getCenter().getY()+ballRadius) >= canvasHeight or (ball.getCenter().getY()-ballRadius) <= 0:
@@ -55,12 +55,14 @@ def gameplay():
         key = win.checkKey()
         if key == "Right":
             if 450!=paddle.getCenter().getX():
-                paddle.move(20.0,0.0)
+                paddle.move(40.0,0.0)
         if key == "Left":
             if 50!=paddle.getCenter().getX():
-                paddle.move(-20.0,0.0)
-
-                
+                paddle.move(-40.0,0.0)
+        
+        # make ball bounce from paddle
+        if (ball.getCenter().getY() - ballRadius <= 40.0 ) and (ball.getCenter().getX() + ballRadius > paddle.getCenter().getX() - 50) and (ball.getCenter().getX() - ballRadius < paddle.getCenter().getX() + 50):
+            ballYspeed = ballYspeed * -1
             
             
 
