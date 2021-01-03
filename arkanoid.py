@@ -1,6 +1,6 @@
 from graphics import *
+import random
 
-#TK_SILENCE_DEPRECATION=1
 
 # Canvas
 canvasHeight,canvasWidth=500,500
@@ -14,15 +14,6 @@ ballRadius=25.0
 # Paddle
 #paddle=Rectangle(Point(200,20),Point(300,40))
 #paddle.draw(win)
-
-def movingPaddle(paddle,clickPoint):
-    
-    while True:
-        #if(clickPoint):
-        paddle.move(clickPoint.getX(),30)
-            #paddle.draw(win)
-    
-
 # Bounce ball
 # Bricks
 # gameplay
@@ -32,13 +23,23 @@ def gameplay():
     paddleCenter = 50
     paddle.draw(win)
 
-    ball=Circle(Point(150,200),ballRadius)
+    ball=Circle(Point(250,65),ballRadius)
     ball.draw(win)
     ballXspeed=7
     ballYspeed=7
     
+    #Bricks
+    brick=[]
+    for i in range(10):
+        brick.append(Rectangle(Point(50*i,425),Point((i*50)+50,475)))
+        brick[i].setFill(color_rgb(random.randint(30,255),random.randint(30,255),random.randint(30,255)))
+        brick[i].draw(win)
+
+
+
     gameOver=False
 
+    win.getMouse()
 
     while True:
 
@@ -47,7 +48,13 @@ def gameplay():
             ballXspeed = ballXspeed * -1
         if (ball.getCenter().getY()+ballRadius) >= canvasHeight or (ball.getCenter().getY()-ballRadius) <= 0:
             ballYspeed = ballYspeed * -1
-        
+        # Define bricks
+        for i in range(len(brick)):
+            if (ball.getCenter().getY() - ballRadius >= brick[i].getCenter().getY()-50) and (brick[i].getCenter().getX() - 25 < ball.getCenter().getX() < brick[i].getCenter().getX() + 25):
+                brick[i].undraw()
+                brick[i].move(0,75)
+                ballYspeed *= -1
+
         # movement of ball
         ball.move(ballXspeed, ballYspeed)
 
@@ -63,7 +70,7 @@ def gameplay():
         # make ball bounce from paddle
         if (ball.getCenter().getY() - ballRadius <= 40.0 ) and (ball.getCenter().getX() + ballRadius > paddle.getCenter().getX() - 50) and (ball.getCenter().getX() - ballRadius < paddle.getCenter().getX() + 50):
             ballYspeed = ballYspeed * -1
-            
+        
             
 
 
@@ -71,6 +78,6 @@ def gameplay():
 def main():
     
     gameplay()
-    win.getMouse()
+    
 
 main()
