@@ -10,20 +10,27 @@ win.setBackground(color_rgb(63, 195, 182))
 win.setCoords(0,0,500,500)
 ballRadius=25.0
 
+# Welcome function
+def welcome():
+    welcome = Text(Point(250,250),"Welcome to Arkanoid\nProgram by Daniel Diaz")
+    start = Text(Point(250,200),"To start game click in any part of the page to start\n to move the paddle you need to use your left and right directional keys\n objective of the game the ball need to bounce from the paddle \nso you can heat the brick and the brick will disappeard after \nall bricks are gone you win the game")
+    welcome.draw(win)
+    start.draw(win)
+    if win.getMouse():
+        welcome.undraw()
+        start.undraw()
 
-# Paddle
-#paddle=Rectangle(Point(200,20),Point(300,40))
-#paddle.draw(win)
-# Bounce ball
-# Bricks
-# gameplay
 def gameplay():
 
+    # Paddle
     paddle=Rectangle(Point(200,20),Point(300,40))
     paddleCenter = 50
+    paddle.setFill("black")
     paddle.draw(win)
 
+    # Ball
     ball=Circle(Point(250,65),ballRadius)
+    ball.setFill("red")
     ball.draw(win)
     ballXspeed=7
     ballYspeed=7
@@ -35,30 +42,27 @@ def gameplay():
         brick[i].setFill(color_rgb(random.randint(30,255),random.randint(30,255),random.randint(30,255)))
         brick[i].draw(win)
 
-
-
+    # while gameover is false the loop will continue untill is true
     gameOver=False
-
-    win.getMouse()
-
-    while True:
+    while not gameOver:
 
         # Making ball bounce on the boundaries of the page
         if (ball.getCenter().getX()+ballRadius) >= canvasWidth or (ball.getCenter().getX()-ballRadius) <= 0:
             ballXspeed = ballXspeed * -1
         if (ball.getCenter().getY()+ballRadius) >= canvasHeight or (ball.getCenter().getY()-ballRadius) <= 0:
             ballYspeed = ballYspeed * -1
-        # Define bricks
+        
+        # Making ball bounce of brick and eliminate the brick that touches
         for i in range(len(brick)):
             if (ball.getCenter().getY() - ballRadius >= brick[i].getCenter().getY()-50) and (brick[i].getCenter().getX() - 25 < ball.getCenter().getX() < brick[i].getCenter().getX() + 25):
                 brick[i].undraw()
                 brick[i].move(0,75)
                 ballYspeed *= -1
 
-        # movement of ball
+        # Movement of ball
         ball.move(ballXspeed, ballYspeed)
 
-        # movement of the paddle left or right with keys
+        # Movement of the paddle left or right with keys
         key = win.checkKey()
         if key == "Right":
             if 450!=paddle.getCenter().getX():
@@ -67,16 +71,31 @@ def gameplay():
             if 50!=paddle.getCenter().getX():
                 paddle.move(-40.0,0.0)
         
-        # make ball bounce from paddle
+        # Make ball bounce from paddle
         if (ball.getCenter().getY() - ballRadius <= 40.0 ) and (ball.getCenter().getX() + ballRadius > paddle.getCenter().getX() - 50) and (ball.getCenter().getX() - ballRadius < paddle.getCenter().getX() + 50):
             ballYspeed = ballYspeed * -1
         
+        #loop to see if all the brick disappear to exit the while loop
+        count=0
+        for i in range(len(brick)):
+            if (brick[i].getCenter().getY()-25)==500:
+                count=count+1
+            if count == 10:
+                gameOver=True
+
+    # Finish the game
+    finish = Text(Point(250,250),"You won!!!\n To exit click anywhere in the page")
+    finish.draw(win)
+    if win.getMouse():
+        win.Close()
+
             
 
 
 
 def main():
-    
+
+    welcome()
     gameplay()
     
 
