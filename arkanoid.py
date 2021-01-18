@@ -3,15 +3,17 @@ import random
 
 
 # Canvas
-canvasHeight,canvasWidth=500,500
+def canvasDisplay():
 
-win = GraphWin("Arkanoid",canvasWidth,canvasHeight)
-win.setBackground(color_rgb(63, 195, 182))
-win.setCoords(0,0,500,500)
-ballRadius=25.0
+    canvasHeight,canvasWidth=500,500
+
+    win = GraphWin("Arkanoid",canvasWidth,canvasHeight)
+    win.setBackground(color_rgb(63, 195, 182))
+    win.setCoords(0,0,500,500)
+    return win
 
 # Welcome function
-def welcome():
+def welcome(win):
     welcome = Text(Point(250,250),"Welcome to Arkanoid\nProgram by Daniel Diaz")
     start = Text(Point(250,200),"To start game click in any part of the page to start\n to move the paddle you need to use your left and right directional keys\n objective of the game the ball need to bounce from the paddle \nso you can heat the brick and the brick will disappeard after \nall bricks are gone you win the game")
     welcome.draw(win)
@@ -20,7 +22,7 @@ def welcome():
         welcome.undraw()
         start.undraw()
 
-def gameplay():
+def gameplay(win):
 
     # Paddle
     paddle=Rectangle(Point(200,20),Point(300,40))
@@ -32,8 +34,9 @@ def gameplay():
     ball=Circle(Point(250,65),ballRadius)
     ball.setFill("red")
     ball.draw(win)
-    ballXspeed=7
-    ballYspeed=7
+    ballXspeed=5.0
+    ballYspeed=5.0
+    ballRadius=25.0
     
     #Bricks
     brick=[]
@@ -74,7 +77,7 @@ def gameplay():
         # Make ball bounce from paddle
         if (ball.getCenter().getY() - ballRadius <= 40.0 ) and (ball.getCenter().getX() + ballRadius > paddle.getCenter().getX() - 50) and (ball.getCenter().getX() - ballRadius < paddle.getCenter().getX() + 50):
             ballYspeed = ballYspeed * -1
-        
+        update(30)
         #loop to see if all the brick disappear to exit the while loop
         count=0
         for i in range(len(brick)):
@@ -87,7 +90,7 @@ def gameplay():
     finish = Text(Point(250,250),"You won!!!\n To exit click anywhere in the page")
     finish.draw(win)
     if win.getMouse():
-        win.Close()
+        win.close()
 
             
 
@@ -95,8 +98,9 @@ def gameplay():
 
 def main():
 
-    welcome()
-    gameplay()
+    win=canvasDisplay()
+    welcome(win)
+    gameplay(win)
     
 
 main()
