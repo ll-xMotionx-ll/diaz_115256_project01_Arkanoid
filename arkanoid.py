@@ -1,11 +1,11 @@
 from graphics import *
 import random
 
-
+canvasHeight,canvasWidth=500,500
 # Canvas
 def canvasDisplay():
 
-    canvasHeight,canvasWidth=500,500
+    #canvasHeight,canvasWidth=500,500
 
     win = GraphWin("Arkanoid",canvasWidth,canvasHeight)
     win.setBackground(color_rgb(63, 195, 182))
@@ -31,12 +31,13 @@ def gameplay(win):
     paddle.draw(win)
 
     # Ball
+    ballRadius=25.0
     ball=Circle(Point(250,65),ballRadius)
     ball.setFill("red")
     ball.draw(win)
     ballXspeed=5.0
     ballYspeed=5.0
-    ballRadius=25.0
+    
     
     #Bricks
     brick=[]
