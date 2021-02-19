@@ -2,6 +2,54 @@ from graphics import *
 import random
 
 canvasHeight,canvasWidth=500,500
+class Paddle:
+
+    def __init__(self,win):
+        self.paddle=Rectangle(Point(200,20),Point(300,40))
+        self.paddleCenter = 50
+        self.paddle.setFill("black")
+        self.paddle.draw(win)
+    def setColor(self,color,win):
+        self.paddle.setFill(color)
+        self.paddle.draw(win)
+    def movePaddle(self,):
+        pass
+    def getCenterX(self):
+        return self.paddle.getCenter().getX()
+    def getCenterY(self):
+        return self.paddle.getCenter().getY()
+    def moveRight(self):
+         self.paddle.move(40.0,0.0)
+    def moveLeft(self):
+            self.paddle.move(-40.0,0.0)
+    
+
+class Ball:
+    def __init__(self,win):
+        self.ballRadius=25.0
+        self.ball=Circle(Point(250,65),self.ballRadius)
+        self.ball.setFill("red")
+        self.ball.draw(win)
+        self.ballXspeed=5.0
+        self.ballYspeed=5.0
+    def getCenterX(self):
+        return self.ball.getCenter().getX()
+    def getCenterY(self):
+        return self.ball.getCenter().getY()
+    def getBallRadius(self):
+        return self.ballRadius
+    def setBallXspeed(self,x):
+        self.ballXspeed=x
+    def setBallYspeed(self,y):
+        self.ballYspeed=y
+    def getBallXspeed(self):
+        return self.ballXspeed
+    def getBallYspeed(self):
+        return self.ballYspeed
+    def ballMove(self):
+        self.ball.move(self.ballXspeed,self.ballYspeed)
+
+
 # Canvas
 def canvasDisplay():
 
@@ -11,6 +59,7 @@ def canvasDisplay():
     win.setBackground(color_rgb(63, 195, 182))
     win.setCoords(0,0,500,500)
     return win
+
 
 # Welcome function
 def welcome(win):
@@ -24,20 +73,8 @@ def welcome(win):
 
 def gameplay(win):
 
-    # Paddle
-    paddle=Rectangle(Point(200,20),Point(300,40))
-    paddleCenter = 50
-    paddle.setFill("black")
-    paddle.draw(win)
-
-    # Ball
-    ballRadius=25.0
-    ball=Circle(Point(250,65),ballRadius)
-    ball.setFill("red")
-    ball.draw(win)
-    ballXspeed=5.0
-    ballYspeed=5.0
-    
+    paddle= Paddle(win)
+    ball=Ball(win)
     
     #Bricks
     brick=[]
@@ -51,33 +88,35 @@ def gameplay(win):
     while not gameOver:
 
         # Making ball bounce on the boundaries of the page
-        if (ball.getCenter().getX()+ballRadius) >= canvasWidth or (ball.getCenter().getX()-ballRadius) <= 0:
-            ballXspeed = ballXspeed * -1
-        if (ball.getCenter().getY()+ballRadius) >= canvasHeight or (ball.getCenter().getY()-ballRadius) <= 0:
-            ballYspeed = ballYspeed * -1
+        if (ball.getCenterX()+ball.getBallRadius()) >= canvasWidth or (ball.getCenterX()-ball.getBallRadius()) <= 0:
+            ball.setBallXspeed(ball.getBallXspeed()*-1.0)
+            
+        if (ball.getCenterY()+ball.getBallRadius()) >= canvasHeight or (ball.getCenterY()-ball.getBallRadius()) <= 0:
+            ball.setBallYspeed(ball.getBallYspeed()*-1.0)
+            
         
         # Making ball bounce of brick and eliminate the brick that touches
         for i in range(len(brick)):
-            if (ball.getCenter().getY() - ballRadius >= brick[i].getCenter().getY()-50) and (brick[i].getCenter().getX() - 25 < ball.getCenter().getX() < brick[i].getCenter().getX() + 25):
+            if (ball.getCenterY()-ball.getBallRadius() >= brick[i].getCenter().getY()-50) and (brick[i].getCenter().getX() - 25 < ball.getCenterX() < brick[i].getCenter().getX() + 25):
                 brick[i].undraw()
                 brick[i].move(0,75)
-                ballYspeed *= -1
+                ball.setBallYspeed(ball.getBallYspeed()*-1.0)
 
         # Movement of ball
-        ball.move(ballXspeed, ballYspeed)
+        ball.ballMove()
 
         # Movement of the paddle left or right with keys
         key = win.checkKey()
         if key == "Right":
-            if 450!=paddle.getCenter().getX():
-                paddle.move(40.0,0.0)
+            if 450!=paddle.getCenterX():
+                paddle.moveRight()
         if key == "Left":
-            if 50!=paddle.getCenter().getX():
-                paddle.move(-40.0,0.0)
+            if 50!=paddle.getCenterX():
+                paddle.moveLeft()
         
         # Make ball bounce from paddle
-        if (ball.getCenter().getY() - ballRadius <= 40.0 ) and (ball.getCenter().getX() + ballRadius > paddle.getCenter().getX() - 50) and (ball.getCenter().getX() - ballRadius < paddle.getCenter().getX() + 50):
-            ballYspeed = ballYspeed * -1
+        if (ball.getCenterY()-ball.getBallRadius() <= 40.0 ) and (ball.getCenterX()+ball.getBallRadius() > paddle.getCenterX() - 50) and (ball.getCenterX()-ball.getBallRadius() < paddle.getCenterX() + 50):
+            ball.setBallYspeed(ball.getBallYspeed()*-1.0)
         update(30)
         #loop to see if all the brick disappear to exit the while loop
         count=0
